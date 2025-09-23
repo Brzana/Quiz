@@ -38,6 +38,10 @@ function reducer(state, action) {
       };
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
+    case "finish":
+      return { ...state, status: "finished" };
+    case "restart":
+      return { ...initialState, questions: state.questions, status: "ready" };
     default:
       throw new Error("Unknown action type");
   }
@@ -86,10 +90,21 @@ function App() {
               dispatch={dispatch}
               answer={state.answer}
             />
-            <NextButton dispatch={dispatch} answer={state.answer} />
+            <NextButton
+              dispatch={dispatch}
+              answer={state.answer}
+              index={state.index}
+              numOfQuestions={numQuestions}
+            />
           </>
         )}
-        {state.status === "finished" && <FinishScreen points={state.points} />}
+        {state.status === "finished" && (
+          <FinishScreen
+            points={state.points}
+            highScore={highScore}
+            dispatch={dispatch}
+          />
+        )}
       </Main>
     </div>
   );
